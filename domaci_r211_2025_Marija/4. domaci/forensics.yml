@@ -1,0 +1,59 @@
+---
+- name: Collect forensic artifacts for CVE-2015-3306
+  hosts: all
+  become: yes
+  gather_facts: no
+
+  vars:
+    case_id: "CASE_CVE_2015_3306"
+    artifact_root: "/tmp/forensics_{{ case_id }}"
+    artifact_archive: "/tmp/forensics_{{ case_id }}.tar.gz"
+
+  tasks:
+
+    - name: Create forensic artifact directory
+      file:
+        path: "{{ artifact_root }}"
+        state: directory
+        mode: '0700'
+
+    - name: Collect ProFTPD version
+      shell: |
+        /opt/proftpd/sbin/proftpd -v > {{ artifact_root }}/proftpd_version.txt 2>/dev/null || true
+
+    - name: Copy ProFTPD configuration
+      shell: |
+        mkdir -p {{ artifact_root }}/proftpd_conf
+        cp /opt/proftpd/etc/proftpd.conf {{ artifact_root }}/proftpd_conf/ 2>/dev/null || true
+
+    - name: Check loaded ProFTPD modules
+      shell: |
+        /opt/proftpd/sbin/proftpd -l > {{ artifact_root }}/loaded_modules.txt 2>/dev/null || true
+
+    - name: Collect syslog entries related to ProFTPD
+      shell: |
+        mkdir -p {{ artifact_root }}/proftpd_logs
+        grep -i proftpd /var/log/messages > {{ artifact_root }}/proftpd_logs/syslog_proftpd.txt 2>/dev/null || true
+        grep -i ftp /var/log/messages >> {{ artifact_root }}/proftpd_logs/syslog_proftpd.txt 2>/dev/null || true
+        grep -i proftpd /var/log/syslog >> {{ artifact_root }}/proftpd_logs/syslog_proftpd.txt 2>/dev/null || true
+        grep -i ftp /var/log/syslog >> {{ artifact_root }}/proftpd_logs/syslog_proftpd.txt 2>/dev/null || true
+
+    - name: Create forensic archive
+      shell: |
+        tar -czf {{ artifact_archive }} -C /tmp forensics_{{ case_id }}
+
+    - name: Fetch forensic archive to local machine
+      fetch:
+        src: "{{ artifact_archive }}"
+        dest: "./forensics/"
+        flat: yes
+
+    - name: Remove forensic archive from compromised host
+      file:
+        path: "{{ artifact_archive }}"
+        state: absent
+
+    - name: Remove forensic artifact directory from compromised host
+      file:
+        path: "{{ artifact_root }}"
+        state: absent

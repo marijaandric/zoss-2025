@@ -1,0 +1,38 @@
+---
+- name: PostgreSQL Backup
+  hosts: metasploitable3
+  become: yes
+  vars:
+    db_name: baza
+    remote_backup_dir: /opt/pg_backup
+    remote_backup_file: "{{ remote_backup_dir }}/{{ db_name }}.sql"
+    local_backup_dir: ./pg_backups
+
+  tasks:
+
+    - name: Create backup directory on remote host
+      file:
+        path: "{{ remote_backup_dir }}"
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: '0755'
+
+    - name: Dump PostgreSQL database
+      become: yes
+      become_user: postgres
+      shell: pg_dump {{ db_name }} > {{ remote_backup_file }}
+
+    - name: Create local backup directory (control machine)
+      delegate_to: localhost
+      become: no
+      run_once: true
+      file:
+        path: "{{ local_backup_dir }}"
+        state: directory
+
+    - name: Fetch backup to control machine
+      fetch:
+        src: "{{ remote_backup_file }}"
+        dest: "{{ local_backup_dir }}/"
+        flat: yes

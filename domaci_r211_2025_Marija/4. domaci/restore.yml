@@ -1,0 +1,26 @@
+- name: PostgreSQL Restore
+  hosts: metasploitable3
+  become: yes
+  vars:
+    db_name: baza
+    local_backup_file: ./pg_backups/baza.sql
+    remote_tmp_file: /tmp/postgres_restore.sql
+
+  tasks:
+
+    - name: Copy backup from control machine to remote host
+      copy:
+        src: "{{ local_backup_file }}"
+        dest: "{{ remote_tmp_file }}"
+        owner: postgres
+        group: postgres
+        mode: '0644'
+
+    - name: Restore PostgreSQL database
+      become_user: postgres
+      shell: psql {{ db_name }} < {{ remote_tmp_file }}
+
+    - name: Remove temporary restore file
+      file:
+        path: "{{ remote_tmp_file }}"
+        state: absent
