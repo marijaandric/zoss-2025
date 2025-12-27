@@ -1,0 +1,63 @@
+---
+- name: Collect forensic artifacts for CVE-2014-6271 (Shellshock)
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    case_id: "CASE_SHELLSHOCK_001"
+    artifact_root: "/tmp/forensics_{{ case_id }}"
+    artifact_archive: "/tmp/forensics_{{ case_id }}.tar.gz"
+
+  tasks:
+    - name: Create forensic artifact directory
+      file:
+        path: "{{ artifact_root }}"
+        state: directory
+        mode: '0700'
+
+    - name: Collect system information
+      shell: |
+        uname -a > {{ artifact_root }}/system_uname.txt
+        uptime > {{ artifact_root }}/system_uptime.txt
+
+    - name: Collect running processes
+      shell: ps auxf > {{ artifact_root }}/processes.txt
+
+    - name: Collect network connections
+      shell: netstat -plant > {{ artifact_root }}/network_connections.txt
+      ignore_errors: yes
+
+    - name: Copy authentication logs
+      shell: |
+        cp /var/log/auth.log {{ artifact_root }}/auth.log 2>/dev/null || true
+
+    - name: Copy Apache logs
+      shell: |
+        mkdir -p {{ artifact_root }}/apache_logs
+        cp /var/log/apache2/* {{ artifact_root }}/apache_logs/ 2>/dev/null || true
+
+    - name: Search for Shellshock payloads in logs
+      shell: |
+        grep -R "() { :; };" /var/log > {{ artifact_root }}/shellshock_log_hits.txt 2>/dev/null || true
+
+    - name: Copy CGI directories
+      shell: |
+        tar -czf {{ artifact_root }}/cgi_dirs.tar.gz \
+        /var/www/cgi-bin 2>/dev/null || true
+
+    - name: Collect bash history files
+      shell: |
+        cp /root/.bash_history {{ artifact_root }}/root_bash_history.txt 2>/dev/null || true
+        cp /home/{{ ansible_user }}/.bash_history {{ artifact_root }}/user_bash_history.txt 2>/dev/null || true
+
+    - name: Create forensic archive
+      shell: |
+        tar -czf {{ artifact_archive }} -C /tmp forensics_{{ case_id }}
+
+    - name: Fetch forensic archive to local machine
+      fetch:
+        src: "{{ artifact_archive }}"
+        dest: "./forensics/"
+        flat: yes
+

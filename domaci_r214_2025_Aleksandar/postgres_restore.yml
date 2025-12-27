@@ -1,0 +1,27 @@
+---
+- name: Restore PostgreSQL databases from backup
+  hosts: postgres
+  become: yes
+
+  vars:
+    remote_restore_file: "/tmp/postgres_restore.sql"
+
+  tasks:
+    - name: Copy backup file to PostgreSQL server
+      copy:
+        src: "{{ local_backup_file }}"
+        dest: "{{ remote_restore_file }}"
+        owner: postgres
+        group: postgres
+        mode: '0600'
+
+    - name: Restore PostgreSQL databases
+      become_user: postgres
+      shell: |
+        psql -f {{ remote_restore_file }}
+
+    - name: Remove restore file from server
+      file:
+        path: "{{ remote_restore_file }}"
+        state: absent
+

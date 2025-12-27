@@ -1,0 +1,40 @@
+---
+- name: Backup all PostgreSQL databases
+  hosts: postgres
+  become: yes
+  vars:
+    backup_dir: /var/backups/postgresql
+    timestamp: "{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}-{{ ansible_date_time.second }}"
+    backup_file: "{{ backup_dir }}/postgres_backup_{{ timestamp }}.sql"
+
+  tasks:
+    - name: Create PostgreSQL backup directory
+      file:
+        path: "{{ backup_dir }}"
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: '0750'
+
+    - name: Backup all PostgreSQL databases
+      become_user: postgres
+      command: >
+        pg_dumpall --clean --file={{ backup_file }}
+      args:
+        creates: "{{ backup_file }}"
+
+    - name: Verify backup file exists
+      stat:
+        path: "{{ backup_file }}"
+      register: backup_status
+
+    - name: Show backup result
+      debug:
+        msg: "PostgreSQL backup created at {{ backup_file }}"
+      when: backup_status.stat.exists
+    
+    - name: Copy PostgreSQL backup to local machine
+      fetch:
+        src: "{{ backup_file }}"
+        dest: "./pg_backups/"
+        flat: yes
