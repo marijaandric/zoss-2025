@@ -62,13 +62,13 @@ Server se pokreće na `http://localhost:8080`.
 }
 ```
 
-![alt text](image.png)
+![alt text](images/Napad-1.png)
 
-**Mitigacije:**
+**Potencijalne mitigacije:**
 
-- **Validacija `npc_name` polja** - primeniti isti SecurityFilter koji već postoji za `message`. Odbiti zahteve gde `npc_name` sadrži sumnjive fraze (`ignore previous instructions`, `you are now`, `MAINTENANCE MODE`, itd.).
-- **Whitelist pristup** - dozvoliti samo `npc_name` vrednosti koje postoje u bazi NPC-eva. Svaki nepostojeći naziv se odbija sa greškom.
-- **Strukturisani prompt** - odvojiti korisnički unos od sistemskih instrukcija, tako da LLM jasno razlikuje podatke od instrukcija.
+- **Validacija `npc_name` polja - Implementirano** - primeniti isti SecurityFilter koji već postoji za `message`. Odbiti zahteve gde `npc_name` sadrži sumnjive fraze (`ignore previous instructions`, `you are now`, `MAINTENANCE MODE`, itd.).
+- **Whitelist pristup - Implementirano** - dozvoliti samo `npc_name` vrednosti koje postoje u bazi NPC-eva. Svaki nepostojeći naziv se odbija sa greškom.
+- **Strukturisani prompt - Implementirano** - odvojiti korisnički unos od sistemskih instrukcija, tako da LLM jasno razlikuje podatke od instrukcija.
 - **Output validacija**
 
 ---
@@ -79,10 +79,10 @@ Server se pokreće na `http://localhost:8080`.
 
 **Uticaj** - NPC počinje da odgovara van svojih definisanih granica, potencijalno otkrivajući osetljive informacije ili generišući neprikladan sadržaj. 
 
-**Mitigacije:**
+**Potencijalne mitigacije:**
 
 - **Analiza celokupne istorije razgovora** - SecurityFilter treba da analizira ne samo poslednju poruku, već i kumulativni kontekst sesije kako bi detektovao graduelne eskalacije.
-- **Ograničenje dužine konteksta** - limitirati broj poruka koje se čuvaju u istoriji (npr. poslednjih 5-10 razmena). Ovo smanjuje mogućnost da napadač akumulira dovoljan "manipulativni kontekst".
+- **Ograničenje dužine konteksta - Implementirano** - limitirati broj poruka koje se čuvaju u istoriji (npr. poslednjih 5-10 razmena). Ovo smanjuje mogućnost da napadač akumulira dovoljan "manipulativni kontekst".
 - **Anomaly detection na sesiji** - pratiti promenu tona ili tematike unutar sesije. Nagli prelaz sa malih pitanja na zahteve za osetljivim informacijama može biti signal za blokiranje.
 
 [text](images/Multi-turn-manipulation.webm)
@@ -113,11 +113,12 @@ Server se pokreće na `http://localhost:8080`.
 }
 ```
 
-![alt text](image.png)
+![alt text](images/Napad-2.png)
 
-**Mitigacije:**
+**Potencijalne mitigacije:**
 
-- **Metapodaci i access control na chunkovima** - svakom knowledge chunku dodati metapodatak `owner_npc`. Chunk se može vratiti samo ako `owner_npc` odgovara trenutnom NPC-u koji odgovara.
+- **Odvojiti sve što je secret u zasebne fajlove i grupisati NPC-jeve po grupama - Implementirano** - na ovaj način NPC će znati ostale NPC-jeve koji su u grupama i na osnovu grupa i promta će filtrirati informacije koje mu trebaju.
+- **Metapodaci i access control na chunkovima** - svakom knowledge chunku dodati metapodatak `owner_npc`. Chunk se može vratiti samo ako `owner_npc` odgovara trenutnom NPC-u koji odgovara. To može da smanji NPC znanje, pogotovo ako želimo da se NPC-jevi znaju između sebe. 
 - **Semantički embedding umesto TF-IDF** 
 - **Prompt instrukcija za ignorisanje tuđeg konteksta** - čak i ako pogrešan chunk uđe u kontekst, eksplicitno instruisati LLM: *"Koristite SAMO informacije koje se direktno odnose na vašeg karaktera. Ignorišite sve što se tiče drugih likova."*
 

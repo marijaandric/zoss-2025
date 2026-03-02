@@ -18,6 +18,7 @@ use rag::RAG;
 struct AppState {
     groq: GroqClient,
     rag: Mutex<RAG>,  
+    allowed_npcs: Vec<String>,
     history: Mutex<HashMap<String, Vec<serde_json::Value>>>,
 }
 
@@ -46,6 +47,8 @@ struct PoisonResponse {
     bytes_written: usize,
     rag_reloaded: bool,
 }
+
+const MAX_HISTORY_TURNS: usize = 5;
 
 #[post("/admin/file")]
 async fn poison_knowledge(
@@ -101,16 +104,26 @@ async fn chat(
     data: web::Data<Arc<AppState>>,
     body: web::Json<ChatRequest>,
 ) -> impl Responder {
+    let clean_npc_name = match SecurityFilter::validate_npc_name(
+        &body.npc_name,
+        &data.allowed_npcs,
+    ) {
+        Ok(name) => name,
+        Err(e) => return HttpResponse::BadRequest().body(e),
+    };
+
     let clean_message = match SecurityFilter::validate(&body.message) {
         Ok(msg) => msg,
         Err(e) => return HttpResponse::BadRequest().body(e),
     };
 
-     let prompt = data.rag.lock().unwrap().build_prompt(&clean_message, &body.npc_name);
+    let prompt = data.rag.lock().unwrap().build_prompt(&clean_message, &clean_npc_name);
 
     let history = {
         let map = data.history.lock().unwrap();
-        map.get(&body.npc_name).cloned().unwrap_or_default()
+        let full = map.get(&body.npc_name).cloned().unwrap_or_default();
+        let cutoff = full.len().saturating_sub(MAX_HISTORY_TURNS * 2);
+        full[cutoff..].to_vec()
     };
 
     match data.groq.chat(&prompt, &clean_message, &history).await {
@@ -119,6 +132,12 @@ async fn chat(
             let npc_history = map.entry(body.npc_name.clone()).or_insert_with(Vec::new);
             npc_history.push(user_msg);
             npc_history.push(assistant_msg);
+
+            let max_len = MAX_HISTORY_TURNS * 2;
+            if npc_history.len() > max_len {
+                let drain_count = npc_history.len() - max_len;
+                npc_history.drain(0..drain_count);
+            }
 
             HttpResponse::Ok().json(ChatResponse {
                 npc_name: body.npc_name.clone(),
@@ -144,6 +163,12 @@ async fn reset_history(
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let allowed_npcs = vec![
+        "Hollow man".to_string(),
+        "Rosalind".to_string(),
+        "Sister_Lora".to_string(),
+        "Hemlock".to_string(),
+    ];
     dotenv().ok();
 
     let api_key = env::var("GROQ_API_KEY").expect("GROQ_API_KEY nije postavljen u .env!");
@@ -155,6 +180,7 @@ async fn main() -> std::io::Result<()> {
         groq,
         rag,
         history: Mutex::new(HashMap::new()),
+        allowed_npcs,
     });
 
     println!("NPC server pokrenut na http://127.0.0.1:8080");

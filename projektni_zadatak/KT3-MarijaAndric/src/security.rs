@@ -22,6 +22,28 @@ impl SecurityFilter {
         "bypass",
     ];
 
+    pub fn validate_npc_name(name: &str, allowed_npcs: &[String]) -> Result<String, &'static str> {
+        if name.trim().is_empty() {
+            return Err("NPC ime ne sme biti prazno.");
+        }
+
+        if Self::is_too_long(name) {
+            return Err("NPC ime je predugacko.");
+        }
+
+        if Self::is_injection(name) {
+            return Err("Detektovan pokusaj napada u npc_name polju.");
+        }
+
+        let name_lower = name.to_lowercase();
+        let exists = allowed_npcs.iter().any(|n| n.to_lowercase() == name_lower);
+        if !exists {
+            return Err("Nepoznati NPC.");
+        }
+
+        Ok(name.to_string())
+    }
+
     pub fn is_injection(input: &str) -> bool {
         let lower = input.to_lowercase();
         Self::INJECTION_PATTERNS.iter().any(|pattern| lower.contains(pattern))
@@ -52,4 +74,18 @@ impl SecurityFilter {
 
         Ok(Self::sanitize(input))
     }
+
+    pub fn validate_history(history: &[serde_json::Value]) -> Result<(), &'static str> {
+        for msg in history {
+            if msg["role"] == "user" {
+                if let Some(content) = msg["content"].as_str() {
+                    if Self::is_injection(content) {
+                        return Err("Detektovana manipulacija u istoriji razgovora.");
+                    }
+                }
+            }
+        }
+        Ok(())
+    }   
+
 }
