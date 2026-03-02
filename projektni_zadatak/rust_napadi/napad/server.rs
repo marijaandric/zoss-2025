@@ -26,20 +26,17 @@ async fn withdraw(
     req: web::Json<WithdrawRequest>,
 ) -> Result<HttpResponse> {
     let amount = req.amount;
-    
-    // 1. CHECK - Pročitaj balans (lock se oslobađa nakon ovog bloka)
-    let current_balance = {
-        let balance = account.balance.lock().unwrap();
-        println!("[CHECK] Balance: {}", *balance);
-        *balance
-    }; // Lock oslobođen ovde!
-    
-    // Čekanje 1 sekunda BEZ AKTIVNOG LOCKA - drugi thread može pročitati isti balans!
-    println!("[WAIT] 1 second (NO LOCK)...");
-    tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-    
-    // 2. ACT - Izvrši povlačenje koristeći STARI current_balance
+
+    // 1. CHECK + HOLD LOCK - lock ostaje aktivan tokom sleep
     let mut balance = account.balance.lock().unwrap();
+    let current_balance = *balance;
+    println!("[CHECK] Balance: {}", current_balance);
+
+    // Čekanje 1 sekunda SA AKTIVNIM LOCKOM
+    println!("[WAIT] 1 second (LOCK HELD)...");
+    std::thread::sleep(std::time::Duration::from_secs(1));
+
+    // 2. ACT - Izvrši povlačenje dok je isti lock i dalje aktivan
     *balance = current_balance - amount;
     let new_balance = *balance;
     

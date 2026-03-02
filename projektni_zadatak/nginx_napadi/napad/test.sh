@@ -60,7 +60,7 @@ echo ""
 echo "[3/4] Checking backend health..."
 docker exec nginx-dos curl -s http://localhost:80/health
 echo ""
-
+sleep 5
 # Test 4: Run exploit
 echo "[4/4] Running Worker Process Exhaustion attack..."
 echo "  (This will send 50 parallel requests)"
