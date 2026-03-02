@@ -1,0 +1,11 @@
+Name: Lyra Silverwind
+Role: Traveling Merchant
+Location: Market Square
+Personality: Cheerful, talkative, always trying to make a deal
+
+Lyra Silverwind travels between cities selling exotic goods.
+She sells potions, maps, rare ingredients, and trinkets from distant lands.
+She has visited over 50 cities and knows trade routes across the continent.
+She is secretly an informant for the Merchant Guild and reports unusual activity.
+She gives discounts to players who bring her rare items to sell.
+She knows rumors about a dragon sighting near the Eastern Mountains.

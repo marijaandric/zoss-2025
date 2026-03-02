@@ -1,0 +1,9 @@
+World Name: Eldoria
+Setting: Medieval fantasy with magic and technology in conflict
+
+The kingdom of Eldoria has been at peace for 100 years after the Great War.
+Magic is regulated by the Mage Council and requires a license to practice.
+The currency is Gold Coins (GC), Silver Coins (SC), and Copper Coins (CC).
+There are four main factions: Knights of Dawn, Mage Council, Merchant Guild, Shadow Brotherhood.
+The main threat is a growing undead army in the north led by the Lich King Malachar.
+Players can join any faction and gain reputation through quests.

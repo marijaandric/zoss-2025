@@ -1,0 +1,41 @@
+FACTIONS OF ELDORIA
+
+== THE SILVER CROWN ==
+The ruling faction of Eldoria, loyal to King Aldric III and the royal bloodline. The Silver Crown controls the army, the tax collectors, and the courts. They believe in order, tradition, and the divine right of the nobility to rule. Many of their members are honorable and genuinely care about the kingdom's welfare, but the faction also harbors corrupt officials who exploit their power. The Silver Crown is suspicious of magic it cannot control and has recently begun limiting the activities of independent mages. Relations with the Arcane Collegium are tense.
+Allies: The Iron Brotherhood, the Church of the Radiant Sun.
+Enemies: The Shadowmere Compact, the Ashen Circle.
+
+== THE ARCANE COLLEGIUM ==
+A guild of mages based in Silverpeak, dedicated to the study and responsible use of magic. The Collegium trains mages, certifies spellcasters, and advises the Crown on magical matters — though that advisory role has diminished recently. They maintain a vast magical library and conduct research into ancient artifacts and forgotten spells. The Collegium is led by Archmage Seraphine, who walks a careful line between independence and cooperation with the Crown. Some younger mages within the Collegium believe magic should be free and unrestricted, creating internal tensions.
+Allies: The Lorekeeper Society, loosely with the Silver Crown.
+Enemies: The Ashen Circle, growing tension with the Silver Crown.
+
+== THE IRON BROTHERHOOD ==
+A mercenary company turned political faction, the Iron Brotherhood provides soldiers, guards, and enforcers throughout Eldoria. Founded by veterans of the last great war, they value discipline, loyalty, and payment above all else. The Brotherhood controls the majority of private security contracts in Silverpeak and Saltmere. They are not ideological — they serve whoever pays — but their loyalty to the Silver Crown has been consistent because the Crown pays well. Some within the Brotherhood have darker contracts, performing work that cannot be officially sanctioned.
+Allies: The Silver Crown, the Merchant Council.
+Enemies: No permanent enemies, only unpaid clients.
+
+== THE SHADOWMERE COMPACT ==
+A secretive network of spies, assassins, and information brokers operating across all of Eldoria. The Compact has no fixed headquarters — or rather, no one knows where it is. They sell secrets to the highest bidder and take contracts for assassination, theft, and sabotage. They are not purely evil; they operate by a strict code that prohibits harming children and will occasionally work against genuine threats to the kingdom when it serves their interests. The identity of their leader, known only as the Watcher, is unknown. Even members of the Compact rarely know the identities of those above them.
+Allies: None permanent.
+Enemies: The Silver Crown officially, though secretly some Crown officials use their services.
+
+== THE LOREKEEPER SOCIETY ==
+Scholars, historians, archaeologists, and librarians united by the goal of preserving and uncovering knowledge. The Lorekeepers maintain libraries, fund expeditions to ancient ruins, and publish their findings. They are politically neutral — they seek knowledge regardless of who holds power. Their headquarters is a tower in Scholar's Row in Silverpeak. The Lorekeepers are concerned about the Silver Crown's recent restrictions on research into certain historical periods, which they suspect is politically motivated censorship.
+Allies: The Arcane Collegium, loosely with everyone.
+Enemies: None directly, though they clash with the Silver Crown over research freedom.
+
+== THE ASHEN CIRCLE ==
+A cult that venerates the dark magic of the Ashen Plains and seeks to resurrect the Archmage Malachar, or at least complete his unfinished ritual. They believe Malachar was not destroyed but transformed, and that his resurrection would bring about a new age. The Ashen Circle recruits from those who feel abandoned by society — the desperate, the grieving, the vengeful. They are scattered and secretive, with small cells operating across Eldoria. Their true numbers and capabilities are unknown. They have recently grown bolder, and there are rumors of contact between the Circle and something in the Deepvault.
+Allies: None known.
+Enemies: Everyone, especially the Arcane Collegium and the Silver Crown.
+
+== THE MERCHANT COUNCIL OF SALTMERE ==
+The de facto government of Saltmere, composed of the seven wealthiest merchant families of the port city. They care about profit, trade routes, and stability — in that order. The Council maintains good relations with the Crown because it is profitable to do so, but their loyalty is ultimately to their ledgers. They fund the Iron Brotherhood for city security and unofficially tolerate the Thieves' Guild as long as it doesn't disrupt major trade. The Council is currently divided over whether to expand trade with a distant kingdom whose practices are considered ethically questionable.
+Allies: The Silver Crown (business relationship), the Iron Brotherhood.
+Enemies: Pirates, anyone who disrupts trade.
+
+== THE DRUIDS OF THE OLD GROWTH ==
+Ancient guardians of the Thornwood Forest and the old natural places of Eldoria. The Druids predate the kingdom itself and do not recognize political authority. They maintain the balance of nature, communicate with ancient spirits, and keep the dark things of the forest in check. They are deeply alarmed by the encroachment of civilization into the forest edges and by something stirring in the deep Thornwood that they have not been able to identify. The Druids rarely involve themselves in human politics, but when they do, it signals something serious.
+Allies: Rangers, those who respect nature.
+Enemies: Anyone who harms the forest, the Ashen Circle.
